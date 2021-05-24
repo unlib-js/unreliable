@@ -10,30 +10,35 @@ export interface Daemon<U extends Unreliable<any>> extends EventBarrier {
   notify(event: DaemonEvents.START_FAILED, arg: EventArgs.StartFailed, count?: number): this
   notify(event: DaemonEvents.RUNNING, arg: EventArgs.Running, count?: number): this
   notify(event: DaemonEvents.RETRY_SCHEDULED, arg: EventArgs.RetryScheduled, count?: number): this
+  notify(event: DaemonEvents.DIED, arg: EventArgs.Died, count?: number): this
   notify(event: string, value: any, count?: number): this
 
   waitFor(event: DaemonEvents.STARTING, timeout?: number, signal?: AbortSignal): Promise<EventArgs.Starting>
   waitFor(event: DaemonEvents.START_FAILED, timeout?: number, signal?: AbortSignal): Promise<EventArgs.StartFailed>
   waitFor(event: DaemonEvents.RUNNING, timeout?: number, signal?: AbortSignal): Promise<EventArgs.Running>
   waitFor(event: DaemonEvents.RETRY_SCHEDULED, timeout?: number, signal?: AbortSignal): Promise<EventArgs.RetryScheduled>
+  waitFor(event: DaemonEvents.DIED, timeout?: number): Promise<EventArgs.Died>
   waitFor(event: string, timeout?: number, signal?: AbortSignal): Promise<any>
 
   on(event: DaemonEvents.STARTING, callback: (arg: EventArgs.Starting) => void): this
   on(event: DaemonEvents.START_FAILED, callback: (arg: EventArgs.StartFailed) => void): this
   on(event: DaemonEvents.RUNNING, callback: (arg: EventArgs.Running) => void): this
   on(event: DaemonEvents.RETRY_SCHEDULED, callback: (arg: EventArgs.RetryScheduled) => void): this
+  on(event: DaemonEvents.DIED, callback: (arg: EventArgs.Died) => void): this
   on(event: string, callback: (...args: any[]) => any): this
 
   once(event: DaemonEvents.STARTING, callback: (arg: EventArgs.Starting) => void): this
   once(event: DaemonEvents.START_FAILED, callback: (arg: EventArgs.StartFailed) => void): this
   once(event: DaemonEvents.RUNNING, callback: (arg: EventArgs.Running) => void): this
   once(event: DaemonEvents.RETRY_SCHEDULED, callback: (arg: EventArgs.RetryScheduled) => void): this
+  once(event: DaemonEvents.DIED, callback: (arg: EventArgs.Died) => void): this
   once(event: string, callback: (...args: any[]) => any): this
 
   off(event: DaemonEvents.STARTING, callback: (arg: EventArgs.Starting) => void): this
   off(event: DaemonEvents.START_FAILED, callback: (arg: EventArgs.StartFailed) => void): this
   off(event: DaemonEvents.RUNNING, callback: (arg: EventArgs.Running) => void): this
   off(event: DaemonEvents.RETRY_SCHEDULED, callback: (arg: EventArgs.RetryScheduled) => void): this
+  off(event: DaemonEvents.DIED, callback: (arg: EventArgs.Died) => void): this
   off(event: string, callback: (...args: any[]) => any): this
 }
 
@@ -129,6 +134,7 @@ export class Daemon<U extends Unreliable<any>> extends EventBarrier {
         const startFailure = new StartFailureError(err, nthAttempt, -1)
         this.notify(DaemonEvents.START_FAILED, startFailure)
         this._state = DaemonStatus.DEAD
+        this.notify(DaemonEvents.DIED, startFailure)
         this.abort(DaemonEvents.RUNNING, startFailure)
       } else if (!this.dead) {
         // Emit event and schedule retry
@@ -175,6 +181,7 @@ export class Daemon<U extends Unreliable<any>> extends EventBarrier {
    */
   public stop() {
     this._state = DaemonStatus.DEAD
+    this.notify(DaemonEvents.DIED, null)
     this._cleanUp()
     if (this._retryTimer) {
       clearTimeout(this._retryTimer)

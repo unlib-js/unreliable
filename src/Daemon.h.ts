@@ -14,7 +14,11 @@ export enum DaemonEvents {
   /**
    * A retry attempt is scheduled, this is emitted in the same tick with `START_FAILED`
    */
-  RETRY_SCHEDULED = 'retry-scheduled'
+  RETRY_SCHEDULED = 'retry-scheduled',
+  /**
+   * The daemon has died because of start failure or being instructed to stop
+   */
+  DIED = 'died'
 }
 
 export enum DaemonStatus {
@@ -73,4 +77,8 @@ export namespace EventArgs {
     nthAttempt: number
     retryDelay: number
   }
+  /**
+   * The reason of death, `null` for being instructed to stop
+   */
+  export type Died = StartFailureError | null
 }
