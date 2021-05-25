@@ -1,6 +1,6 @@
 {
   "name": "@unlib-js/unreliable",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Management wrapper for unreliable resources, e.g., another process",
   "main": "build/index.js",
   "scripts": {
