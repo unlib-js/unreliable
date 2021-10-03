@@ -3,6 +3,7 @@ import { Disposable, on } from './disposable-events'
 import EventEmitter, { once } from 'events'
 import { StartFailureReason, StateChange, StopReason, UnreliableDeathError, UnreliableMeta } from './Unreliable.h'
 import EventBarrier from '@unlib-js/event-barrier'
+import { ErrorType } from '@unlib-js/event-barrier/build/errors'
 
 
 export function getMeta<U extends EventEmitter>(inst: Unreliable<U>): UnreliableMeta {
@@ -104,7 +105,7 @@ export abstract class Unreliable<U extends EventEmitter> extends EventBarrier {
       await this._start()
     } catch (err) {
       const { _meta: { stateConf: { abortOnStartFailure }, states: { startFailed } } } = this
-      for (const event of abortOnStartFailure) this.abort(event, err)
+      for (const event of abortOnStartFailure) this.abort(event, err as ErrorType)
       this._setState(startFailed, { err } as StartFailureReason)
       throw err
     }
