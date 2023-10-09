@@ -7,7 +7,7 @@ import { setTimeout as sleep } from 'timers/promises'
 
 
 class FakeProcess extends Unreliable<EventEmitter> {
-  static meta: UnreliableMeta = {
+  public static override meta: UnreliableMeta = {
     states: {
       init: 'init',
       starting: 'starting',
@@ -31,7 +31,7 @@ class FakeProcess extends Unreliable<EventEmitter> {
 
   public life: number = 0
 
-  protected async _createAndCheck() {
+  protected override async _createAndCheck() {
     const { life } = this
     if (life < 5000) throw new Error
     const it = new EventEmitter
@@ -40,7 +40,7 @@ class FakeProcess extends Unreliable<EventEmitter> {
     return it
   }
 
-  protected _stop() {
+  protected override _stop() {
     this.it!.emit('exit')
   }
 }

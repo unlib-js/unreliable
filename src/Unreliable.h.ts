@@ -36,7 +36,7 @@ export interface UnreliableMeta {
 }
 
 export class UnreliableDeathError<U, R> extends Error {
-  public name = 'UnreliableDeathError'
+  public override name = 'UnreliableDeathError'
   public readonly unreliable: U
   public readonly reason: R
   constructor(unreliable: U, reason: R, msg?: string) {

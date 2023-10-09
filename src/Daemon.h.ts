@@ -57,8 +57,8 @@ export interface DaemonOptions {
 }
 
 export class StartFailureError extends Error {
-  name = 'StartFailureError'
-  public readonly cause: any
+  public override name = 'StartFailureError'
+  public override readonly cause: any
   public readonly nthAttempt: number
   public readonly retryIn: number
   constructor(cause: any, nthAttempt: number, retryIn: number, msg?: string) {
