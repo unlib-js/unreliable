@@ -7,7 +7,7 @@ Management wrapper for unreliable resources, e.g., another process.
 ```TypeScript
 import { ChildProcess, spawn } from 'child_process'
 import Unreliable from '@unlib-js/unreliable'
-import stopOnExit from '@unlib-js/unreliable/build/stopOnExit'
+import stopOnExit from '@unlib-js/unreliable/stopOnExit'
 import { once } from 'events'
 
 
@@ -62,4 +62,4 @@ async function foo() {
 }
 ```
 
-For example of unreliable daemon, see `src/test.ts`.
+For example of unreliable daemon, see `src/Daemon.test.ts`.
