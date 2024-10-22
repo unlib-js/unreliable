@@ -1,16 +1,15 @@
+import EventBarrier, { type ErrorType } from '@unlib-js/event-barrier'
 import assert from 'assert'
-import { Disposable, on } from './disposable-events'
 import EventEmitter, { once } from 'events'
+import { Disposable, on } from './disposable-events'
 import { StartFailureReason, StateChange, StopReason, UnreliableDeathError, UnreliableMeta } from './Unreliable.h'
-import EventBarrier from '@unlib-js/event-barrier'
-import { ErrorType } from '@unlib-js/event-barrier/build/errors'
 
 
 export function getMeta<U extends EventEmitter>(inst: Unreliable<U>): UnreliableMeta {
   return (inst.constructor as typeof Unreliable).meta
 }
 
-export interface Unreliable<U extends EventEmitter> extends EventBarrier {
+interface Unreliable<U extends EventEmitter> extends EventBarrier {
   notify<C extends StateChange>(state: string, change: C, count?: number): this
   notify(state: string, value?: any, count?: number): this
   waitFor<C extends StateChange>(state: string, timeout?: number, signal?: AbortSignal): Promise<C>
@@ -51,11 +50,11 @@ export interface Unreliable<U extends EventEmitter> extends EventBarrier {
  * }
  * ```
  */
-export abstract class Unreliable<U extends EventEmitter> extends EventBarrier {
+abstract class Unreliable<U extends EventEmitter> extends EventBarrier {
   /**
    * Sub-class must override this
    */
-  static meta: UnreliableMeta
+  static readonly meta: UnreliableMeta
   _state: string = getMeta(this).states.init
   _setState<R extends Array<any>>(newState: string, extra: StopReason<R>): void
   _setState(newState: string, extra: StartFailureReason): void

@@ -1,12 +1,55 @@
 {
   "name": "@unlib-js/unreliable",
-  "version": "1.1.3",
+  "version": "2.0.0",
   "description": "Management wrapper for unreliable resources, e.g., another process",
-  "main": "build/index.js",
+  "main": "build/index.cjs",
+  "module": "build/index.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/index.js",
+      "require": "./build/index.cjs"
+    },
+    "./Daemon.h": {
+      "types": "./build/Daemon.h.d.ts",
+      "import": "./build/Daemon.h.js",
+      "require": "./build/Daemon.h.cjs"
+    },
+    "./Daemon": {
+      "types": "./build/Daemon.d.ts",
+      "import": "./build/Daemon.js",
+      "require": "./build/Daemon.cjs"
+    },
+    "./disposable-events": {
+      "types": "./build/disposable-events.d.ts",
+      "import": "./build/disposable-events.js",
+      "require": "./build/disposable-events.cjs"
+    },
+    "./stopOnExit": {
+      "types": "./build/stopOnExit.d.ts",
+      "import": "./build/stopOnExit.js",
+      "require": "./build/stopOnExit.cjs"
+    },
+    "./Unreliable.h": {
+      "types": "./build/Unreliable.h.d.ts",
+      "import": "./build/Unreliable.h.js",
+      "require": "./build/Unreliable.h.cjs"
+    },
+    "./Unreliable": {
+      "types": "./build/Unreliable.d.ts",
+      "import": "./build/Unreliable.js",
+      "require": "./build/Unreliable.cjs"
+    }
+  },
+  "files": [
+    "build"
+  ],
   "scripts": {
-    "test": "node build/test.js",
-    "build": "tsc",
-    "install": "tsc"
+    "test": "vitest",
+    "gen-exports": "tsx ./scripts/gen-exports.ts",
+    "build": "tsup",
+    "prepublish": "tsup"
   },
   "keywords": [
     "unreliable"
@@ -14,13 +57,18 @@
   "author": "Untitled",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^20.8.3",
-    "typescript": "^5.2.2"
+    "@types/node": "^22.7.7",
+    "@unlib-js/event-barrier": "^2.0.1",
+    "tsup": "^8.3.0",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.3"
   },
+  "packageManager": "pnpm@9.12.2",
   "repository": {
     "url": "https://github.com/unlib-js/unreliable.git"
   },
-  "dependencies": {
-    "@unlib-js/event-barrier": "github:unlib-js/event-barrier"
+  "peerDependencies": {
+    "@unlib-js/event-barrier": "^2.0.1"
   }
 }
